@@ -14,15 +14,19 @@ class  Seats{
 public class SimpleBookingTest{
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
-        Seat[] seats = new Seat[10];
+        Seats[] seats = new Seats[10];
+        int nextAvailable = 0;
+        String[] waitingList = new String[5];
+        int waitingCount = 0;
         for(int i=0; i<seats.length; i++){
-            seats[i] = new Seat(i+1);
+            seats[i] = new Seats(i+1);
         }
         while(true){
             System.out.println("1. Book Seat");
             System.out.println("2. Show available Seats");
             System.out.println("3. Cancel Booking:");
-            System.out.println("4. Exit");
+            System.out.println("4. Show Waiting List");
+            System.out.println("5. Exit");
             System.out.println("Enter your choice:");
             int choice = sc.nextInt();
             sc.nextLine();
@@ -33,24 +37,29 @@ public class SimpleBookingTest{
                     String name = sc.nextLine();
                     System.out.print("Enter number of Seats to book:");
                     int n = sc.nextInt();
-                    int bookedCount = 0;
-                    for(Seat s : seats){
+                    int bookedCount = 0; 
+
+                     for(int i=0; i<n; i++){
+                        if(nextAvailable >= seats.length){
+                            break;
+                        }
+                        Seats s = seats[nextAvailable];
                         if(!s.isBooked){
                             s.isBooked = true;
                             s.passengerName = name;
                             bookedCount++;
-                            System.out.println("Seat "+s.seatNo+" booked successfully for "+name);
-                            if(bookedCount == n) break;
+                            System.out.println("Seat No "+s.seatNo+ " booked Successfully for "+name);
+                            nextAvailable++;
                         }
-                    }
+                     }
                 if(bookedCount < n){
-                    System.out.println("Only "+bookedCount+" seats were available and booked.");
+                    System.out.println("Only "+seats.length+" seats were available and booked.");
                 }
                 break;
                 case 2:
                     System.out.println("Available Seats:");
                     boolean anyAvailable = false;
-                    for(Seat s : seats){
+                    for(Seats s : seats){
                         if(!s.isBooked){
                             System.out.println("Seat No:" +s.seatNo);
                             anyAvailable = true;
@@ -70,7 +79,7 @@ public class SimpleBookingTest{
                         int cancelSeat = sc.nextInt();
 
                         if (cancelSeat >= 1 && cancelSeat <= seats.length) {
-                            Seat s = seats[cancelSeat - 1];
+                            Seats s = seats[cancelSeat - 1];
                             if (s.isBooked) {
                                 System.out.println("Booking for Seat " + s.seatNo + " cancelled successfully.");
                                 s.isBooked = false;
@@ -84,6 +93,18 @@ public class SimpleBookingTest{
                     }
                     break;
                 case 4:
+                    System.out.println("Waiting List");
+                    if(waitingCount == 0){
+                        System.out.println("No one in the waiting List.");
+                    }else{
+                        int pos = 1;
+                        for(String pname : waitingList){
+                            System.out.println(pos+" . "+pname);
+                            pos++;
+                        }
+                    } 
+                break;  
+                case 5:
                     System.out.println("Exiting...");
                     sc.close(); 
                     return;
